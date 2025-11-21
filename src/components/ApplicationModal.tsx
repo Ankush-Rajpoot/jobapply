@@ -84,12 +84,12 @@ export default function ApplicationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-white md:bg-black/50">
+    <div className="fixed inset-0 z-50 bg-white md:bg-black/50 md:overflow-y-auto">
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-0 md:p-4">
-        <div className="relative bg-white md:rounded-xl shadow-2xl w-full md:max-w-lg h-full md:h-auto md:max-h-[90vh] overflow-y-auto">
+      <div className="h-full md:min-h-full md:flex md:items-center md:justify-center md:p-4">
+        <div className="relative bg-white md:rounded-xl md:shadow-2xl w-full md:max-w-lg h-full md:h-auto md:max-h-[90vh] flex flex-col md:block overflow-hidden">
           {/* Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-4 md:px-5 py-3 md:py-3 flex items-center justify-between z-10">
+          <div className="shrink-0 bg-white border-b border-gray-200 px-4 md:px-5 py-3 md:py-3 flex items-center justify-between z-10">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Apply for this job</h2>
               <p className="text-xs text-gray-600 mt-0.5">{jobTitle}</p>
@@ -106,7 +106,7 @@ export default function ApplicationModal({
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="p-4 md:p-5 space-y-3.5">
+          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 md:p-5 space-y-3.5 md:flex-none md:overflow-visible">
             <div>
               <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-1">
                 Full Name <span className="text-red-500">*</span>
@@ -116,7 +116,7 @@ export default function ApplicationModal({
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition-all text-sm"
                 placeholder="Enter your full name"
                 required
                 disabled={submitting}
@@ -132,7 +132,7 @@ export default function ApplicationModal({
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition-all text-sm"
                 placeholder="your.email@example.com"
                 required
                 disabled={submitting}
@@ -148,7 +148,7 @@ export default function ApplicationModal({
                 id="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition-all text-sm"
                 placeholder="+1 (555) 000-0000"
                 required
                 disabled={submitting}
