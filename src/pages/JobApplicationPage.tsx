@@ -29,7 +29,7 @@ export default function JobApplicationPage() {
       setLoading(true);
       setError(null);
       const jobData = await getJobById(id);
-      
+
       if (!jobData) {
         setError('Job not found');
         setJob(null);
@@ -45,7 +45,14 @@ export default function JobApplicationPage() {
     }
   };
 
-  const handleSubmit = async (formData: { name: string; email: string; phone?: string }, resumeFile: File) => {
+  const handleSubmit = async (formData: {
+    name: string;
+    email: string;
+    phone?: string;
+    notice_period_days?: number;
+    current_salary?: number;
+    expected_salary?: number;
+  }, resumeFile: File) => {
     if (!job) return;
 
     try {
@@ -104,10 +111,10 @@ export default function JobApplicationPage() {
       {/* Main Content */}
       <div className="max-w-5xl mx-auto px-3 md:px-6 py-4 md:py-10">
         <div className="max-w-4xl mx-auto">
-          
+
           {/* Job Details */}
           <div className="space-y-4 md:space-y-8">
-            
+
             {/* Company & Job Title */}
             <div className="bg-white rounded-xl border border-gray-200 p-3 md:p-8">
               <div className="flex items-start gap-2.5 md:gap-4 mb-3 md:mb-6">
@@ -133,9 +140,9 @@ export default function JobApplicationPage() {
                   )}
                 </div>
               </div>
-              
+
               <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-6">{job.job_role}</h1>
-              
+
               {/* Key Details Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 md:gap-4">
                 <div className="flex items-start gap-2 md:gap-3">
@@ -184,7 +191,7 @@ export default function JobApplicationPage() {
                   <div>
                     <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Salary</div>
                     <div className="text-sm font-medium text-gray-900">
-                      {job.min_ctc && job.max_ctc 
+                      {job.min_ctc && job.max_ctc
                         ? `₹${job.min_ctc.toLocaleString()} - ₹${job.max_ctc.toLocaleString()}`
                         : job.ctc}
                     </div>
@@ -220,11 +227,10 @@ export default function JobApplicationPage() {
                 <button
                   onClick={() => setIsModalOpen(true)}
                   disabled={hasApplied}
-                  className={`w-full px-4 md:px-5 py-2 md:py-2.5 rounded-lg font-semibold transition-colors shadow-sm text-sm ${
-                    hasApplied
-                      ? 'bg-green-600 text-white cursor-not-allowed'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                  }`}
+                  className={`w-full px-4 md:px-5 py-2 md:py-2.5 rounded-lg font-semibold transition-colors shadow-sm text-sm ${hasApplied
+                    ? 'bg-green-600 text-white cursor-not-allowed'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}
                 >
                   {hasApplied ? (
                     <span className="flex items-center justify-center gap-2">

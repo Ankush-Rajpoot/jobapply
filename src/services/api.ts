@@ -57,13 +57,13 @@ export async function getJobById(jobId: string) {
   `;
 
   const result = await makeGraphQLRequest<{ vocallabs_hr2_posts_by_pk: any }>(query, { jobId });
-  
+
   if (!result.vocallabs_hr2_posts_by_pk) {
     return null;
   }
 
   const job = result.vocallabs_hr2_posts_by_pk;
-  
+
   // Fetch company profile using client_id from vocallabs_hr2_company
   let companyName = 'Company';
   let companyWebsite = '';
@@ -76,7 +76,7 @@ export async function getJobById(jobId: string) {
         }
       }
     `;
-    
+
     try {
       const companyResult = await makeGraphQLRequest<{ vocallabs_hr2_company: any[] }>(companyQuery, { clientId: job.client_id });
       console.log('📊 Company data fetched:', companyResult);
@@ -88,7 +88,7 @@ export async function getJobById(jobId: string) {
       console.warn('Could not fetch company info:', error);
     }
   }
-  
+
   return {
     id: job.id,
     client_id: job.client_id,
@@ -113,16 +113,23 @@ export async function submitApplication(
   jobId: string,
   _jobTitle: string,
   clientId: string,
-  formData: { name: string; email: string; phone?: string },
+  formData: {
+    name: string;
+    email: string;
+    phone?: string;
+    notice_period_days?: number;
+    current_salary?: number;
+    expected_salary?: number;
+  },
   resumeFile: File
 ) {
   const formDataToSend = new FormData();
-  
+
   // Add the resume file with correct field name
   formDataToSend.append('resume', resumeFile);
-  
+
   // Create request object matching the backend structure
-  const requestData = {
+  const requestData: any = {
     client_id: clientId,
     job_id: jobId,
     candidate_name: formData.name,
@@ -130,12 +137,23 @@ export async function submitApplication(
     candidate_phone: formData.phone || '',
     cover_letter: ''
   };
-  
+
+  // Add optional fields if provided
+  if (formData.notice_period_days !== undefined && formData.notice_period_days !== null) {
+    requestData.notice_period_days = formData.notice_period_days;
+  }
+  if (formData.current_salary !== undefined && formData.current_salary !== null) {
+    requestData.current_salary = formData.current_salary;
+  }
+  if (formData.expected_salary !== undefined && formData.expected_salary !== null) {
+    requestData.expected_salary = formData.expected_salary;
+  }
+
   // Add request data as JSON string
   formDataToSend.append('request', JSON.stringify(requestData));
 
   const apiUrl = `${CAMPAIGN_SERVICE_URL}/hr_handler/process-single-resume`;
-  
+
   console.log('📝 Submitting application:', {
     job_id: jobId,
     client_id: clientId,
@@ -143,7 +161,7 @@ export async function submitApplication(
     candidate_email: formData.email,
     apiUrl
   });
-  
+
   const response = await fetch(apiUrl, {
     method: 'POST',
     body: formDataToSend,
@@ -157,6 +175,6 @@ export async function submitApplication(
 
   const result = await response.json();
   console.log('✅ Application submitted successfully:', result);
-  
+
   return result;
 }

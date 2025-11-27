@@ -23,4 +23,7 @@ export type ApplicationFormData = {
   email: string;
   phone: string;
   resume: File | null;
+  notice_period_days?: number;
+  current_salary?: number;
+  expected_salary?: number;
 };

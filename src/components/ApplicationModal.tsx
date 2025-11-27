@@ -4,23 +4,33 @@ interface ApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
   jobTitle: string;
-  onSubmit: (formData: { name: string; email: string; phone?: string }, resumeFile: File) => Promise<void>;
+  onSubmit: (formData: {
+    name: string;
+    email: string;
+    phone?: string;
+    notice_period_days?: number;
+    current_salary?: number;
+    expected_salary?: number;
+  }, resumeFile: File) => Promise<void>;
   submitting: boolean;
   error: string | null;
 }
 
-export default function ApplicationModal({ 
-  isOpen, 
-  onClose, 
-  jobTitle, 
-  onSubmit, 
+export default function ApplicationModal({
+  isOpen,
+  onClose,
+  jobTitle,
+  onSubmit,
   submitting,
-  error 
+  error
 }: ApplicationModalProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [resume, setResume] = useState<File | null>(null);
+  const [noticePeriodDays, setNoticePeriodDays] = useState<string>('');
+  const [currentSalary, setCurrentSalary] = useState<string>('');
+  const [expectedSalary, setExpectedSalary] = useState<string>('');
   const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -62,12 +72,37 @@ export default function ApplicationModal({
     }
 
     try {
-      await onSubmit({ name, email, phone }, resume);
+      const formData: any = { name, email, phone };
+
+      // Add optional fields if provided
+      if (noticePeriodDays.trim()) {
+        const noticeDays = parseInt(noticePeriodDays, 10);
+        if (!isNaN(noticeDays) && noticeDays >= 0) {
+          formData.notice_period_days = noticeDays;
+        }
+      }
+      if (currentSalary.trim()) {
+        const salary = parseFloat(currentSalary.replace(/[^0-9.]/g, ''));
+        if (!isNaN(salary) && salary >= 0) {
+          formData.current_salary = salary;
+        }
+      }
+      if (expectedSalary.trim()) {
+        const salary = parseFloat(expectedSalary.replace(/[^0-9.]/g, ''));
+        if (!isNaN(salary) && salary >= 0) {
+          formData.expected_salary = salary;
+        }
+      }
+
+      await onSubmit(formData, resume);
       // Reset form on success
       setName('');
       setEmail('');
       setPhone('');
       setResume(null);
+      setNoticePeriodDays('');
+      setCurrentSalary('');
+      setExpectedSalary('');
     } catch (err) {
       // Error is handled in parent component
     }
@@ -156,12 +191,61 @@ export default function ApplicationModal({
             </div>
 
             <div>
+              <label htmlFor="notice_period" className="block text-sm font-semibold text-gray-900 mb-1">
+                Notice Period (Days) <span className="text-gray-400">(Optional)</span>
+              </label>
+              <input
+                type="number"
+                id="notice_period"
+                value={noticePeriodDays}
+                onChange={(e) => setNoticePeriodDays(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition-all text-sm"
+                placeholder="e.g., 30, 60, 90"
+                min="0"
+                disabled={submitting}
+              />
+              <p className="mt-1 text-xs text-gray-500">Number of days required to serve notice period</p>
+            </div>
+
+            <div>
+              <label htmlFor="current_salary" className="block text-sm font-semibold text-gray-900 mb-1">
+                Current Salary (₹) <span className="text-gray-400">(Optional)</span>
+              </label>
+              <input
+                type="text"
+                id="current_salary"
+                value={currentSalary}
+                onChange={(e) => setCurrentSalary(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition-all text-sm"
+                placeholder="e.g., 500000 or 5,00,000"
+                disabled={submitting}
+              />
+              <p className="mt-1 text-xs text-gray-500">Your current annual CTC in INR</p>
+            </div>
+
+            <div>
+              <label htmlFor="expected_salary" className="block text-sm font-semibold text-gray-900 mb-1">
+                Expected Salary (₹) <span className="text-gray-400">(Optional)</span>
+              </label>
+              <input
+                type="text"
+                id="expected_salary"
+                value={expectedSalary}
+                onChange={(e) => setExpectedSalary(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition-all text-sm"
+                placeholder="e.g., 800000 or 8,00,000"
+                disabled={submitting}
+              />
+              <p className="mt-1 text-xs text-gray-500">Your expected annual CTC in INR</p>
+            </div>
+
+            <div>
               <label htmlFor="resume" className="block text-sm font-semibold text-gray-900 mb-1">
                 Resume/CV <span className="text-red-500">*</span>
               </label>
               <div className="mt-1">
-                <label 
-                  htmlFor="resume" 
+                <label
+                  htmlFor="resume"
                   className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all"
                 >
                   <div className="flex flex-col items-center justify-center py-3">
