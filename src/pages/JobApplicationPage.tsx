@@ -182,6 +182,7 @@ export default function JobApplicationPage() {
                   </div>
                 </div>
 
+                {/* Salary - Hidden for now
                 <div className="flex items-start gap-2 md:gap-3">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,6 +198,7 @@ export default function JobApplicationPage() {
                     </div>
                   </div>
                 </div>
+                */}
 
                 <div className="flex items-start gap-2 md:gap-3">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
